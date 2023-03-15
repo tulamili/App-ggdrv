@@ -28,8 +28,8 @@ sub tokens ( $$$ ) {
 }
 
 sub show_tokens () { 
-  say "REFRESH TOKEN from the setup file: " , $rtoken0 ; 
-  say "ACCESS  TOKEN from the setup file: " , $atoken0 ;
+  say "REFRESH TOKEN from the setup file: " , $rtoken0 , " (". length($rtoken0)." chars)" ; 
+  say "ACCESS  TOKEN from the setup file: " , $atoken0 , " (". length($atoken0)." chars)" ; 
   1 ; 
 }
 
