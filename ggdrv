@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use 5.008 ; use strict ; use warnings ; 
+use 5.030 ; use strict ; use warnings ; 
 use Getopt::Std ;
 use Getopt::Long qw [ GetOptions :config bundling no_ignore_case pass_through ] ; # GetOptionsFromArray ] ;
 use Time::HiRes qw[ gettimeofday tv_interval sleep ] ; # Perl 5.7.3からコアモジュール
@@ -7,7 +7,7 @@ use Term::ANSIColor qw[ color :constants ] ; $Term::ANSIColor::AUTORESET = 1 ;
 use FindBin qw[ $Script $Bin ] ; 
 use lib "$FindBin::Bin/lib" ; 
 use App::ggdrv::start01 ;
-
+use App::ggdrv::start02 ;
 ## 計算秒数などについての処理
 my $time_start = [ gettimeofday ] ; 
 END{ ## 終了する段階で、二次情報を表示する
@@ -16,6 +16,16 @@ END{ ## 終了する段階で、二次情報を表示する
   my $sec = sprintf "PT %0.3f S", tv_interval ( $time_start ) ; 
   say STDERR BOLD FAINT "-- " , $dt1000->() , "  calculation time: ", $sec,  "  ($Script \$\$=$$)"; 
 }
+
+## 主要部はここから。
+
+GetOptions ( next => \my$next , run => \my$run )  ; 
+& App::ggdrv::start02::show_setup_proc( $run ) if $next ;
+
+
+& App::ggdrv::start01::show_setup_proc() if @ARGV == 0 ;
+
+
 
 ## ヘルプの扱い
 sub VERSION_MESSAGE {}
@@ -47,6 +57,15 @@ sub d3 ($) { $_[0] =~ s/(?<=\d)(?=(\d\d\d)+($|\D))/,/gr } ;
  オプション : 
 
  利用例 : 
+
+   ggdrv   # 引数無しで実行すると、最初のセットアップの仕方(ブラウザ越しで「クライアントシークレット」を作る方法)が表示される。
+   ggdrv --next  # クライアントシークレットなどを、設定ファイルに書き込む方法が表示される。
+   ggdrv --next --run  # 表示される内容を実際に実行する。
+
+
+ 環境変数 : export VAR=VALUE で指定。unset VAR で解除が可能。
+
+   GGDRV_API    :  クライアントIDやクライアントシークレットを保管するファイルの名前。未指定なら ~/ggdrv2303v1 である。
 
  開発メモ:
     
