@@ -14,9 +14,9 @@ use App::ggdrv::fsearchall ;
 use App::ggdrv::upload ;
 use App::ggdrv::update ;
 use App::ggdrv::download ;
-
-use App::ggdrv::upload5 ;
+use App::ggdrv::upload5 ; # uploadに依存
 use App::ggdrv::download5 ;
+use App::ggdrv::sync5 ; # update に依存
 ## 計算秒数などについての処理
 #my %o ; 
 my $print2 ;  # 最後に2次情報を出さないなら 0 という値が設定される。
@@ -46,6 +46,7 @@ for ( $a1 ) {
 
   /^upload5$/ and & App::ggdrv::upload5::upload5 () ;
   /^download5$/ and & App::ggdrv::download5::download5 () ;
+  /^sync5$/ and & App::ggdrv::sync5::sync5 () ;
 }
 exit ;
 
@@ -97,8 +98,8 @@ sub d3 ($) { $_[0] =~ s/(?<=\d)(?=(\d\d\d)+($|\D))/,/gr } ;
 
   [作業対象のファイルを管理しつつアップロード/更新/ダウンロード] ※ サブコマンドに「5」が後置するのが特徴。
    ggdrv upload5 FOLDER_ID LOCAL_DIR > VAR_FILE # アップロードする。標準出力をファイルに保管して、続くサブコマンドでも使う。
-   ggdrv download5 LOCAL_DIR < VAR_FILE         # ダウンロードする。
-
+   ggdrv download5 LOCAL_DIR < VAR_FILE        # ダウンロードする。
+   ggdrv sync5 OLD_DIR NEW_DIR < VAR_FILE   # 同期に使う。OLD_DIRはGoogleドライブと予め同期させ、NEW_DIRと違えば、それをアップデート。
 
  オプション: 
    -2 0 : 最後に2次情報を標準エラー出力に出さない。サブコマンドの後ろに置くこと。
