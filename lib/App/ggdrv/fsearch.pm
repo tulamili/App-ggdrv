@@ -3,7 +3,6 @@ use strict; use warnings ;
 use feature 'say' ;
 use Carp ;
 use Net::Google::Drive ; 
-#binmode STDOUT, ":utf8" ; # binmode STDIN,  ":utf8"　;
 
 my ($gfile, $cid, $csec, $rtoken, $atoken, $disk, $file_name , $files , $fnum ) ; 
 return 1 ;
@@ -26,7 +25,6 @@ sub fsearch () {
 
 }
 
-
 =encoding utf8
 
 =head1
@@ -34,13 +32,10 @@ sub fsearch () {
    最大100個のファイルを取り出す。
    ワイルドカードを使ったファイル名で検索ができる。IDを突き止めることが出来る。
 
-オプション: 
-    -f ファイル名(ワイルドカードなどが使える;要精査) 
-
 開発メモ: 
    * 4個の内のアクセストークンについては、設定は必要だがデタラメでも良い様だ。
    * そのファイルの親フォルダとか、あるフォルダが含むファイルとかの情報も欲しい。
-   * ~検索するとしても、1.3万個のファイルから取り出してくれるのだろうか? 限られた特定の100個だけからということは無かろうか?~
+   * ワイルドカードを使って検索する機能があるとしても、 限られた中だけから100個だけからということは無かろうか?
 
 =cut
 
