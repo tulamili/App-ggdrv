@@ -9,6 +9,7 @@ use lib "$FindBin::Bin/lib" ;
 use App::ggdrv::start01 ; # GCPでAPIを設定する方法を、読む人に説明する文書を表示する。
 use App::ggdrv::start02 ; # 設定ファイルの書き込み方を説明する。自動実行の機能も提供。
 use App::ggdrv::tokens  ; # トークン2個を設定する。表示も可能。
+use App::ggdrv::fsearch ; 
 ## 計算秒数などについての処理
 my $time_start = [ gettimeofday ] ; 
 END{ ## 終了する段階で、二次情報を表示する
@@ -21,16 +22,14 @@ END{ ## 終了する段階で、二次情報を表示する
 ## 主要部はここから。
 
 GetOptions ( next => \my$next , run => \my$run ) ; 
-& App::ggdrv::start02::show_setup_proc( $run ) and exit if $next ;
+do{ & App::ggdrv::start02::show_setup_proc( $run ) ; exit } if $next ;
 
 GetOptions ( tokens => \my$tokens , get => \my$get , try => \my$try , atoken => \my$atoken) ; 
 $tokens = 1 if $atoken  ; # --token が無くても、--atokenが指定されたら、指定されたことにする。
+do{ & App::ggdrv::tokens::tokens( $get , $try , $atoken) ; exit } if $tokens ;
 
-& App::ggdrv::tokens::tokens( $get , $try , $atoken) and exit if $tokens ;
-
-# GetOptions ( fsearch => \my$fsearch , pages => \my$pages ) ; 
-
-
+GetOptions ( fsearch => \my$fsearch , pages => \my$pages ) ; 
+do{ & App::ggdrv::fsearch::fsearch () ; exit } if $fsearch  ;
 
 & App::ggdrv::start01::show_setup_proc() and exit if @ARGV == 0 ; # 最後に実行すべし?? オプションのせいで@ARGV==0はあり得る。
 

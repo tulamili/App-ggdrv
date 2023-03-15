@@ -3,8 +3,6 @@ use strict; use warnings ;
 use feature 'say' ;
 use Carp ;
 use Net::Google::Drive ; 
-my %o ;
-$o{f} //= '*' ; # 探すファイルの名前(のようである)
 #binmode STDOUT, ":utf8" ; # binmode STDIN,  ":utf8"　;
 
 my ($gfile, $cid, $csec, $rtoken, $atoken, $disk, $file_name , $files , $fnum ) ; 
@@ -18,7 +16,8 @@ sub fsearch () {
   $atoken = qx [ sed -ne's/^ACCESS_TOKEN[ =:\t]*//p' $gfile ] =~ s/\n$//r ; 
   $disk = Net::Google::Drive->new( 
     -client_id => $cid, -client_secret => $csec, -refresh_token => $rtoken , -access_token  => $atoken );
-  $file_name = $o{f} ; # ファイル一覧を出力。## アスタリスクで全部のファイルの情報を取ってくる。ただし最大100個のようである。
+
+  $file_name = $ARGV[0] // '*' ; # ファイル一覧を出力。## アスタリスクで全部のファイルの情報を取ってくる。ただし最大100個のようである。
 
   $files = $disk->searchFileByNameContains( -filename => $file_name ) or croak "File '$file_name' not found";
   $fnum = 0 ;
@@ -31,11 +30,7 @@ do { say join"\t",sprintf('%03d',++$fnum),$_->{kind},$_->{id},qq["$_->{name}"],$
 
 =head1
 
- $0 
-   アクセストークンは標準入力から。(メアドは不要。4個の情報が必要。)
-   Net::Google::Drive を使う。
    最大100個のファイルを取り出す。
-
    ワイルドカードを使ったファイル名で検索ができる。IDを突き止めることが出来る。
 
 オプション: 
