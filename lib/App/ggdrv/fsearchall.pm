@@ -4,17 +4,13 @@ use feature 'say' ;
 use Data::Dumper ; 
 use Getopt::Std ; 
 use HTTP::Tiny ;
-
 use JSON ; 
-#use URI::Escape ; 
-#use URI ;
-
 
 my ( $GOOGLE_DRIVE_API , $gfile , $atoken , $count_limit , $uri , %o ) ;
 return 1 ; 
 
-
 sub fsearchall () { 
+  #exit ;
   getopts 'g:D' , \%o ;
   $GOOGLE_DRIVE_API = "https://www.googleapis.com/drive/v3/files" ;
   $gfile = $ENV{ GGDRV_API } // "~/.ggdrv2303v1" ;
