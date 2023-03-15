@@ -6,6 +6,7 @@ use HTTP::Request::Common;
 use JSON qw/encode_json decode_json/;
 use LWP::UserAgent;
 use Getopt::Std ; 
+use Carp; 
 
 my ($gfile , $atoken, $GOOGLE_DRIVE_UPLOAD_API , %o);
 return 1 ;
@@ -34,7 +35,7 @@ sub f_each ( $ ) {
     ] ,
     ) ;
   my $j = decode_json ( $res->content ) ; 
-  say join "\t" , $res->code, $j->{id} , $j->{name}, $j->{mimeType} , $j->{kind} ; 
+  say join "\t" , map { $_ // 'undef' } $res->code , $j->{id}, $j->{name}, $j->{mimeType} , $j->{kind} ; 
 }
 
 =encoding utf8
