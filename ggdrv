@@ -14,9 +14,14 @@ use App::ggdrv::fsearchall ;
 use App::ggdrv::upload ;
 use App::ggdrv::update ;
 use App::ggdrv::download ;
+
+use App::ggdrv::upload5 ;
 ## 計算秒数などについての処理
+#my %o ; 
+my $print2 ;  # 最後に2次情報を出さないなら 0 という値が設定される。
 my $time_start = [ gettimeofday ] ; 
 END{ ## 終了する段階で、二次情報を表示する
+  exit if 0 eq ($print2//'') ;# 0 eq  ( $o{2} // '' ) ;
   use POSIX qw [ strftime ] ; 
   my $dt1000 = sub { my $t = [ gettimeofday ] ; strftime( "%Y-%m-%d %H:%M:%S." . sprintf("%03d", $t->[1] / 1e3 ) , localtime( $t->[0] ) ) } ;
   my $sec = sprintf "PT %0.3f S", tv_interval ( $time_start ) ; 
@@ -26,6 +31,7 @@ END{ ## 終了する段階で、二次情報を表示する
 ## 主要部はここから。
 
 my $a1 = shift @ARGV or do { & App::ggdrv::start::show_setup_proc() ; exit } ;
+GetOptions ( '2=s' => \$print2 ) ;
 GetOptions ( run => \my$run ) ; 
 GetOptions ( tokens => \my$tokens , get => \my$get , try => \my$try , atoken => \my$atoken ) ; 
 for ( $a1 ) { 
@@ -36,10 +42,10 @@ for ( $a1 ) {
   /^upload$/ and & App::ggdrv::upload::upload () ; 
   /^update$/ and & App::ggdrv::update::update () ;
   /^download$/ and & App::ggdrv::download::download ()  ;
+
+  /^upload5$/ and & App::ggdrv::upload5::upload5 () ;
 }
 exit ;
-
-#do { & App::ggdrv::start::show_setup_proc() ; exit }  # 最後に実行すべし?? オプションのせいで@ARGV==0はあり得る。
 
 ## ヘルプの扱い
 sub VERSION_MESSAGE {}
@@ -80,13 +86,16 @@ sub d3 ($) { $_[0] =~ s/(?<=\d)(?=(\d\d\d)+($|\D))/,/gr } ;
 
   [ファイル検索]
    ggdrv fsearch FILENAME # ファイルを最大100個まで探す(フォルダは指定不能)。ワイルドカードを指定可能。タブ区切り5列で出力。
-   ggdrv fsearchall -g10  # ファイルを100個ずつ -g で指定した回数出力(フォルダは指定不能)。1個のファイルにつき、縦に4行を出力。
+   ggdrv fsearchall -g10  # ファイルを100個ずつ -g で指定した回数出力(フォルダは指定不能)。1個のファイルにつき、縦に4行を出力。## <-- 時々リフレッシュトークンを更新する必要あり。
 
   [(単純な)アップロード/更新/ダウンロード]
    ggdrv upload -f フォルダID(28文字) FILE [FILE] .. # アップロードする。 同名ファイルに対し複数回実行したら、その分グーグルドライブ上に現れるので注意。
    ggdrv update ID1 FILE1 [ID2 FILE2] [ID3 FILE3] .. # 更新する。33文字のIDに対して、ローカルのファイルの名前をペアにして指定。
    ggdrv download ファイルID(33文字) ローカルで予定するファイル名 # ダウンロードする。
 
+
+ オプション: 
+   -2 0 : 最後に2次情報を標準エラー出力に出さない。サブコマンドの後ろに置くこと。
 
  環境変数 : export VAR=VALUE で指定。unset VAR で解除が可能。
 
