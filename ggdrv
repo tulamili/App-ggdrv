@@ -24,14 +24,14 @@ END{ ## 終了する段階で、二次情報を表示する
 ## 主要部はここから。
 
 GetOptions ( crecord => \my$crecord , run => \my$run ) ; 
-do{ & App::ggdrv::crecord::show_setup_proc( $run ) ; exit } if $crecord ;
+do { & App::ggdrv::crecord::show_setup_proc( $run ) ; exit } if $crecord ;
 
 GetOptions ( tokens => \my$tokens , get => \my$get , try => \my$try , atoken => \my$atoken) ; 
 $tokens = 1 if $atoken  ; # --token が無くても、--atokenが指定されたら、指定されたことにする。
-do{ & App::ggdrv::tokens::tokens( $get , $try , $atoken) ; exit } if $tokens ;
+do { & App::ggdrv::tokens::tokens( $get , $try , $atoken) ; exit } if $tokens ;
 
 GetOptions ( fsearch => \my$fsearch , pages => \my$pages ) ; 
-do{ & App::ggdrv::fsearch::fsearch () ; exit } if $fsearch  ;
+do { & App::ggdrv::fsearch::fsearch () ; exit } if $fsearch  ;
 
 GetOptions ( fsearchall => \my$fsearchall ) ; 
 do { & App::ggdrv::fsearchall::fsearchall () ; exit } if $fsearchall  ;
