@@ -12,6 +12,7 @@ use App::ggdrv::tokens  ; # トークン2個を設定する。表示も可能。
 use App::ggdrv::fsearch ; 
 use App::ggdrv::fsearchall ; 
 use App::ggdrv::upload ;
+use App::ggdrv::update ;
 use App::ggdrv::download ;
 ## 計算秒数などについての処理
 my $time_start = [ gettimeofday ] ; 
@@ -39,6 +40,9 @@ do { & App::ggdrv::fsearchall::fsearchall () ; exit } if $fsearchall  ;
 
 GetOptions ( upload => \my$upload ) ; 
 do { & App::ggdrv::upload::upload () ; exit } if $upload ;
+
+GetOptions ( update => \my$update ) ; 
+do { & App::ggdrv::update::update () ; exit } if $update ;
 
 GetOptions ( download => \my$download ) ; 
 do { & App::ggdrv::download::download () ; exit } if $download ;
@@ -87,7 +91,8 @@ sub d3 ($) { $_[0] =~ s/(?<=\d)(?=(\d\d\d)+($|\D))/,/gr } ;
    ggdrv --fsearch FILENAME # ファイルを最大100個まで探す(フォルダは指定不能)。ワイルドカードを指定可能。タブ区切り5列で出力。
    ggdrv --fsearchall -g10  # ファイルを100個ずつ -g で指定した回数出力(フォルダは指定不能)。1個のファイルにつき、縦に4行を出力。
 
-   ggdrv --upload -f フォルダID(28文字) FILE [FILE] [FILE] .. # アップロードする。
+   ggdrv --upload -f フォルダID(28文字) FILE [FILE] .. # アップロードする。 同名ファイルに対し複数回実行したら、その分グーグルドライブ上に現れるので注意。
+   ggdrv --update ID1 FILE1 [ID2 FILE2] [ID3 FILE3] .. # 更新する。33文字のIDに対して、ローカルのファイルの名前をペアにして指定。
    ggdrv --download ファイルID(33文字) ローカルで予定するファイル名 # ダウンロードする。
 
 
