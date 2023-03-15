@@ -3,12 +3,17 @@ use warnings;
 use 5.030 ; 
 use feature 'say' ;
 use Net::Google::OAuth ; #use Exporter 'import';
+use POSIX qw [ strftime ] ; 
 use Term::ANSIColor qw[ color :constants ] ; $Term::ANSIColor::AUTORESET = 1 ;
+
 
 my ($gfile, $cid, $csec, $email, $scope, $rtoken0, $atoken0 ) ;
 return 1 ; 
 
 sub tokens ( $$$ ) { 
+  my $get = $_[0] ;
+  my $try = $_[1] ;
+  my $atoken = $_[2] ; 
   $gfile = $ENV{ GGDRV_API } // "~/.ggdrv2303v1" ;
   $cid = qx [ sed -ne's/^CLIENT_ID[ =:\t]*//p' $gfile ] =~ s/\n$//r ; #"54525797.....34dseo.apps.googleusercontent.com" ;
   $csec = qx [ sed -ne's/^CLIENT_SECRET[ =:\t]*//p' $gfile ] =~ s/\n$//r ; # "GOCSP...YUbpe1" ; 
@@ -16,10 +21,9 @@ sub tokens ( $$$ ) {
   $scope = 'drive'; #my $SCOPE  = 'spreadsheets';
   $rtoken0 = qx [ sed -ne's/^REFRESH_TOKEN[ =:\t]*//p' $gfile ] =~ s/\n$//r ; #"1//0e8......yLDJyrKxXNJY" ; 
   $atoken0 = qx [ sed -ne's/^ACCESS_TOKEN[ =:\t]*//p' $gfile ] =~ s/\n$//r ; #"1//0e8......yLDJyrKxXNJY" ; 
-  my $get = $_[0] ;
-  my $try = $_[1] ;
-  my $atoken = $_[2] ; 
   $atoken ? atoken ($try) : $get ? get_tokens () : show_tokens ( $try ) ; 
+  my $mtime = [stat $gfile ]->[9]; # 更新時刻
+  say "Modified time of the setup variable file : " , strftime( "%Y-%m-%d %H:%M:%S." , localtime $mtime )  ;
   1 ;
 }
 
