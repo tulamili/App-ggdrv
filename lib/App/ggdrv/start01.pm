@@ -1,7 +1,14 @@
 package App::ggdrv::start01 ; 
+use Term::ANSIColor qw[ color :constants ] ; $Term::ANSIColor::AUTORESET = 1 ;
+use Exporter 'import';
+our @EXPORT = qw/show_setup_proc/;
+our @EXPORT_OK = qw/show_setup_proc/;
 
-print << "EOF" ; 
-下記では、最初のセットアップ手順を示す。 もっと一般的なヘルプは $0 --help を実行せよ。
+sub show_setup_proc () {
+
+print BOLD YELLOW << "EOF" ; 
+下記では、最初のセットアップ手順を示す。 もっと一般的なヘルプは コマンド $0 --help を実行せよ。
+この下記を実行が出来たら コマンド $0 --next を実行して、表示される文面に従い次のセットアップを実施せよ。
 EOF
 
 print << 'EOF' ; 
@@ -62,5 +69,8 @@ Google社の2022〜2023年時点のサービスを下記では利用している
     6-8-3. 「クライアント」の名前を変更したり、必要となるIDとシークレッドかコピーが可能。
 
 EOF
- 
+
+exit ; 
+
+}
 
