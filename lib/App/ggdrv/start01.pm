@@ -1,8 +1,9 @@
 package App::ggdrv::start01 ; 
 use Term::ANSIColor qw[ color :constants ] ; $Term::ANSIColor::AUTORESET = 1 ;
-use Exporter 'import';
-our @EXPORT = qw/show_setup_proc/;
-our @EXPORT_OK = qw/show_setup_proc/;
+use warnings ; 
+#use Exporter 'import';
+#our @EXPORT = qw/show_setup_proc/;
+#our @EXPORT_OK = qw/show_setup_proc/;
 
 sub show_setup_proc () {
 

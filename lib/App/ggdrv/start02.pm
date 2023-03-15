@@ -1,9 +1,9 @@
 package App::ggdrv::start02 ; 
 use Term::ANSIColor qw[ color :constants ] ; $Term::ANSIColor::AUTORESET = 1 ;
 use Exporter 'import';
-our @EXPORT = qw[ show_setup_proc ] ;
-our @EXPORT_OK = qw[ show_setup_proc ] ;
-
+#our @EXPORT = qw[ show_setup_proc ] ;
+#our @EXPORT_OK = qw[ show_setup_proc ] ;
+	
 sub show_setup_proc ( ) { 
 	
 $| = 1 ;
@@ -12,7 +12,7 @@ print YELLOW << 'EOB1' if ! $run ;
 下記をコピペして実行せよ。そして、生成されたファイル(すぐ次の行)を直接編集して、EMAIL, CLIENT_ID, CLIENT_SECRET の値を設定せよ。
 EOB1
 
-my $GFILE = $ENV{ GGDRV_API } // "~/.ggdrv2303v1";
+my $GFILE = $ENV{ GGDRV_API } // "~/.ggdrv2303v1" ;
 
 my $cmd = << "EOB1" ;
 GGDRV_API=$GFILE
