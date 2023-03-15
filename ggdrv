@@ -16,6 +16,7 @@ use App::ggdrv::update ;
 use App::ggdrv::download ;
 
 use App::ggdrv::upload5 ;
+use App::ggdrv::download5 ;
 ## 計算秒数などについての処理
 #my %o ; 
 my $print2 ;  # 最後に2次情報を出さないなら 0 という値が設定される。
@@ -44,6 +45,7 @@ for ( $a1 ) {
   /^download$/ and & App::ggdrv::download::download ()  ;
 
   /^upload5$/ and & App::ggdrv::upload5::upload5 () ;
+  /^download5$/ and & App::ggdrv::download5::download5 () ;
 }
 exit ;
 
@@ -92,6 +94,10 @@ sub d3 ($) { $_[0] =~ s/(?<=\d)(?=(\d\d\d)+($|\D))/,/gr } ;
    ggdrv upload -f フォルダID(28文字) FILE [FILE] .. # アップロードする。 同名ファイルに対し複数回実行したら、その分グーグルドライブ上に現れるので注意。
    ggdrv update ID1 FILE1 [ID2 FILE2] [ID3 FILE3] .. # 更新する。33文字のIDに対して、ローカルのファイルの名前をペアにして指定。
    ggdrv download ファイルID(33文字) ローカルで予定するファイル名 # ダウンロードする。
+
+  [作業対象のファイルを管理しつつアップロード/更新/ダウンロード] ※ サブコマンドに「5」が後置するのが特徴。
+   ggdrv upload5 FOLDER_ID LOCAL_DIR > VAR_FILE # アップロードする。標準出力をファイルに保管して、続くサブコマンドでも使う。
+   ggdrv download5 LOCAL_DIR < VAR_FILE         # ダウンロードする。
 
 
  オプション: 
