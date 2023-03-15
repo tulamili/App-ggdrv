@@ -21,7 +21,8 @@ sub fsearch () {
 
   $files = $disk->searchFileByNameContains( -filename => $file_name ) or croak "File '$file_name' not found";
   $fnum = 0 ;
-do { say join"\t",sprintf('%03d',++$fnum),$_->{kind},$_->{id},qq["$_->{name}"],$_->{mimeType} } for @{$files} ;
+  binmode STDOUT, ":utf8";
+  do { say join"\t",sprintf('%03d',++$fnum),$_->{kind},$_->{id},qq["$_->{name}"],$_->{mimeType} } for @{$files} ;
 
 }
 
