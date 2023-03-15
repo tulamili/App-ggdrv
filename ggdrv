@@ -4,8 +4,9 @@ use Getopt::Std ;
 use Getopt::Long qw [ GetOptions :config bundling no_ignore_case pass_through ] ; # GetOptionsFromArray ] ;
 use Time::HiRes qw[ gettimeofday tv_interval sleep ] ; # Perl 5.7.3からコアモジュール
 use Term::ANSIColor qw[ color :constants ] ; $Term::ANSIColor::AUTORESET = 1 ;
-use FindBin qw[ $Script ] ; 
-
+use FindBin qw[ $Script $Bin ] ; 
+use lib "$FindBin::Bin/lib" ; 
+use App::ggdrv::start01 ;
 
 ## 計算秒数などについての処理
 my $time_start = [ gettimeofday ] ; 
