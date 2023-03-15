@@ -1,0 +1,7 @@
+
+Revision history for the module "App::ggdrv": 
+
+まず 2022年2月24日〜3月1日に googledrive_op の名前で作成して、GitHubで公開。
+次に 2022年3月3日〜17日に gdrv2022ism として作成。
+
+汎用性を高めるために、3月15日に新たなモジュールとして作成開始。
