@@ -20,10 +20,8 @@ END{ ## 終了する段階で、二次情報を表示する
 ## 主要部はここから。
 
 GetOptions ( next => \my$next , run => \my$run )  ; 
-& App::ggdrv::start02::show_setup_proc( $run ) if $next ;
-
-
-& App::ggdrv::start01::show_setup_proc() if @ARGV == 0 ;
+& App::ggdrv::start02::show_setup_proc( $run ) and exit if $next ;
+& App::ggdrv::start01::show_setup_proc() and exit if @ARGV == 0 ;
 
 
 

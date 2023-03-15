@@ -45,9 +45,9 @@ EOF
 EOB1
 
 print ON_BLUE BOLD $cmd ;
-do { qx [ $cmd ] ; print YELLOW "The above commands are executed !! "} if $run ;
+do { qx [ $cmd ] ; print BRIGHT_RED "The above commands are executed !! "} if $run ;
 print color('reset') ;
 
-exit ; 
+1 ; 
 
 }
