@@ -14,7 +14,11 @@ sub tokens ( $$$ ) {
   my $get = $_[0] ;
   my $try = $_[1] ;
   my $atoken = $_[2] ; 
-  $gfile = $ENV{ GGDRV_API } // "~/.ggdrv2303v1" ;
+  $gfile = ( $ENV{ GGDRV_API } // "~/.ggdrv2303v1" ) ;
+  #open my $FH , '<' , $gfile ; while (<$FH>){say $_ } ;
+  my $mtime = [ stat $gfile ]->[9] ; # 更新時刻 ## $gfile がコマンドラインからは見えるのに、このプログラムからは見えない不具合あり。
+  #say "@tmp" ;
+  #say qx [ ls -l $gfile ] ; exit ;  
   $cid = qx [ sed -ne's/^CLIENT_ID[ =:\t]*//p' $gfile ] =~ s/\n$//r ; #"54525797.....34dseo.apps.googleusercontent.com" ;
   $csec = qx [ sed -ne's/^CLIENT_SECRET[ =:\t]*//p' $gfile ] =~ s/\n$//r ; # "GOCSP...YUbpe1" ; 
   $email = qx [ sed -ne's/^EMAIL[ =:\t]*//p' $gfile ] =~ s/\n$//r ;
@@ -22,14 +26,15 @@ sub tokens ( $$$ ) {
   $rtoken0 = qx [ sed -ne's/^REFRESH_TOKEN[ =:\t]*//p' $gfile ] =~ s/\n$//r ; #"1//0e8......yLDJyrKxXNJY" ; 
   $atoken0 = qx [ sed -ne's/^ACCESS_TOKEN[ =:\t]*//p' $gfile ] =~ s/\n$//r ; #"1//0e8......yLDJyrKxXNJY" ; 
   $atoken ? atoken ($try) : $get ? get_tokens () : show_tokens ( $try ) ; 
-  my $mtime = [stat $gfile ]->[9]; # 更新時刻
-  say "Modified time of the setup variable file : " , strftime( "%Y-%m-%d %H:%M:%S." , localtime $mtime )  ;
+  say "Modified time of the setup variable file : " , strftime( "%Y-%m-%d %H:%M:%S." , localtime $mtime ) if defined $mtime ;
   1 ;
 }
 
 sub show_tokens () { 
-  say "REFRESH TOKEN from the setup file: " , $rtoken0 , " (". length($rtoken0)." chars)" ; 
-  say "ACCESS  TOKEN from the setup file: " , $atoken0 , " (". length($atoken0)." chars)" ; 
+  say REVERSE "REFRESH TOKEN from the setup file: " ;
+  say $rtoken0 , " (". length($rtoken0)." chars)" ; 
+  say REVERSE "ACCESS  TOKEN from the setup file: " ;
+  say $atoken0 , " (". length($atoken0)." chars)" ; 
   1 ; 
 }
 
