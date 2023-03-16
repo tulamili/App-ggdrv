@@ -19,34 +19,35 @@ use App::ggdrv::download5 ;
 use App::ggdrv::sync5 ; # update に依存
 ## 計算秒数などについての処理
 #my %o ; 
-my $print2 ;  # 最後に2次情報を出さないなら 0 という値が設定される。
+our $prt2 ;  # 最後に2次情報を出さないなら 0 という値が設定される。
 my $time_start = [ gettimeofday ] ; 
 END{ ## 終了する段階で、二次情報を表示する
-  exit if 0 eq ($print2//'') ;# 0 eq  ( $o{2} // '' ) ;
+  exit if 0 eq ($prt2//'') ;# 0 eq  ( $o{2} // '' ) ;
   use POSIX qw [ strftime ] ; 
   my $dt1000 = sub { my $t = [ gettimeofday ] ; strftime( "%Y-%m-%d %H:%M:%S." . sprintf("%03d", $t->[1] / 1e3 ) , localtime( $t->[0] ) ) } ;
   my $sec = sprintf "PT %0.3f S", tv_interval ( $time_start ) ; 
-  say STDERR  BOLD YELLOW FAINT "-- " , $dt1000->() , "  calculation time: ", $sec,  "  ( $Script ; \$\$==$$ ; \$GGDRV_API==$ENV{GGDRV_API} )"; 
+  my $env_ga = $ENV{GGDRV_API} // 'undef' ; 
+  say STDERR  BOLD YELLOW FAINT "-- " , $dt1000->() , "  calculation time: ", $sec,  "  ( $Script ; \$\$==$$ ; \$GGDRV_API==$env_ga )"; 
 }
 
 ## 主要部はここから。
 
-my $a1 = shift @ARGV or do { & App::ggdrv::start::show_setup_proc() ; exit } ;
-GetOptions ( '2=s' => \$print2 ) ;
+my $a1 = shift @ARGV or do { $prt2 = 0 ; & App::ggdrv::start::start() ; exit } ;
+GetOptions ( '2=s' => \$prt2 ) ;
 GetOptions ( run => \my$run ) ; 
 GetOptions ( tokens => \my$tokens , get => \my$get , try => \my$try , atoken => \my$atoken ) ; 
 for ( $a1 ) { 
-  /^crecord$/ and & App::ggdrv::crecord::show_setup_proc( $run ) ; 
+  /^crecord$/ and & App::ggdrv::crecord::crecord( $run ) and $prt2 = 0 ; 
   /^(tokens|token)$/ and & App::ggdrv::tokens::tokens( $get , $try , $atoken ) ;
   /^fsearch$/ and & App::ggdrv::fsearch::fsearch () ; 
   /^fsearchall$/ and & App::ggdrv::fsearchall::fsearchall () ;
   /^upload$/ and & App::ggdrv::upload::upload () ; 
   /^update$/ and & App::ggdrv::update::update () ;
   /^download$/ and & App::ggdrv::download::download ()  ;
-
-  /^upload5$/ and & App::ggdrv::upload5::upload5 () ;
+  /^upload5$/ and & App::ggdrv::upload5::upload5 () ;  ## ここから5列TSVファイルを使った操作3種類
   /^download5$/ and & App::ggdrv::download5::download5 () ;
   /^sync5$/ and & App::ggdrv::sync5::sync5 () ;
+  /^--help$/ and do { $prt2=0 ; & HELP_MESSAGE } ;
 }
 exit ;
 
@@ -85,7 +86,7 @@ sub d3 ($) { $_[0] =~ s/(?<=\d)(?=(\d\d\d)+($|\D))/,/gr } ;
    ggdrv tokens  #  トークンの情報2個を単に表示する。(リフレッシュトークン(使わないと半年で無効化)とアクセストークンがある。)
    ggdrv tokens --get   # トークンを取得する(設定ファイルに書き込む)。書き込む前のファイルはバックアップは1回のみ保管。
    ggdrv tokens --get --try   # トークンを取得するが、設定ファイルには書き込まない。
-   ggdrv atoken  # アクセストークンのみ更新する。60分未使用であれば、更新は必要。-try を指定すると設定ファイルに書き込まない。
+   ggdrv tokens --atoken  # アクセストークンのみ更新する。60分未使用であれば、更新は必要。-try を指定すると設定ファイルに書き込まない。
 
   [ファイル検索]
    ggdrv fsearch FILENAME # ファイルを最大100個まで探す(フォルダは指定不能)。ワイルドカードを指定可能。タブ区切り5列で出力。
@@ -108,13 +109,8 @@ sub d3 ($) { $_[0] =~ s/(?<=\d)(?=(\d\d\d)+($|\D))/,/gr } ;
 
    GGDRV_API    :  クライアントIDやクライアントシークレットを保管するファイルの名前。未指定なら ~/ggdrv2303v1 である。
 
- 開発メモ:
-    
-=head1 AUTHOR
 
 下野寿之 Toshiyuki SHIMONO <bin4tsv@gmail.com>
-
-=head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2023 Toshiyuki SHIMONO. All rights reserved.
 This program is free software; you can redistribute it and/or
